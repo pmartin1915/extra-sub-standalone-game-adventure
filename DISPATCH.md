@@ -14,6 +14,8 @@
 | `docs-gen` | Generate or improve documentation | Docs written | `mistral-large-latest` |
 | `self-audit` | Read STATE.md and assess progress vs roadmap | `ai/AUDIT.md` updated | `gemini-2.5-pro` |
 | `roadmap-review` | Evaluate roadmap items, re-scope as needed | ROADMAP.md updated | `gemini-2.5-pro` |
+| `feature` | Build ONE incremental feature toward the ROADMAP goal | Source landed under `src/`, tests pass, `ai/STATE.md` updated with `Next:` line | `codestral-latest` |
+| `proposal` | Write a design doc (e.g. game design doc) based on prior research | Doc in `ai/`, e.g. `ai/GDD.md` | `gemini-2.5-pro` |
 
 ## Requires Confirmation (Never Auto-Execute)
 
@@ -30,7 +32,7 @@ c:\Users\perry\DevProjects\sandbox\extra-sub-standalone-game-adventure\**
 
 ## Opportunistic Lane (Budget Dispatcher)
 
-**Eligible for autonomous execution:** `explore`, `research`, `audit`, `tests-gen`, `docs-gen`, `self-audit`, `roadmap-review`
+**Eligible for autonomous execution:** `explore`, `research`, `audit`, `tests-gen`, `docs-gen`, `self-audit`, `roadmap-review`, `feature`, `proposal`
 
 **Branch naming:** `auto/sandbox-game-adventure-<task>-<YYYYMMDD-HHMMSS>`
 

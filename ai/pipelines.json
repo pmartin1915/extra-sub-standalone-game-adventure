@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "pipelines": [
+    {
+      "name": "build-mvp",
+      "description": "Bootstrap a playable game from a blank slate. Model picks the genre in step 1, writes a design doc in step 2, then scaffolds + builds the core loop in steps 3-5, and audits the MVP in step 6. Each step waits for the previous step's PR to merge before starting, so step N's worktree sees step N-1's landed code.",
+      "goal_signal": "src/ contains a playable game (npm test passes, `node src/main.ts` or equivalent runs to a terminal/render state without crashing)",
+      "active": true,
+      "steps": [
+        {
+          "id": 1,
+          "task": "research",
+          "target": "ai/DECISIONS.md",
+          "description": "Read CLAUDE.md constraints (TypeScript, playable, not RPG/sand). Pick ONE specific game genre + core mechanic that fits. Write rationale to ai/DECISIONS.md including: chosen genre, why it fits constraints, one-paragraph core-loop description, two example MVP features."
+        },
+        {
+          "id": 2,
+          "task": "proposal",
+          "target": "ai/GDD.md",
+          "depends_on": [1],
+          "description": "Read ai/DECISIONS.md. Write a short Game Design Document (GDD) at ai/GDD.md: sections for Core Loop, Win/Loss, Player Actions, Minimum Playable Scope (5-7 concrete features), and Out-of-Scope-for-MVP. Keep it tight — under 200 lines."
+        },
+        {
+          "id": 3,
+          "task": "feature",
+          "target": "package.json, tsconfig.json, src/main.ts, src/__tests__/smoke.test.ts",
+          "depends_on": [2],
+          "description": "SCAFFOLD: initialize package.json (declare vitest + typescript devDeps but do NOT run npm install), tsconfig.json, src/main.ts with a stub entry point, src/__tests__/smoke.test.ts with one passing test, .gitignore. Update ai/STATE.md with a Next: line that points at the first GDD feature."
+        },
+        {
+          "id": 4,
+          "task": "feature",
+          "target": "src/ — first GDD feature",
+          "depends_on": [3],
+          "description": "FIRST FEATURE: implement the smallest GDD feature (e.g. the player's primary action: take input, return a result). Add unit tests in src/__tests__/. Update ai/STATE.md Next: line for the following feature."
+        },
+        {
+          "id": 5,
+          "task": "feature",
+          "target": "src/ — core loop wiring",
+          "depends_on": [4],
+          "description": "CORE LOOP: wire input → update → render. Keep render as plaintext stdout for MVP. The game must be runnable end-to-end via `node src/main.ts` (or via a `start` script). Add a loop-level test in src/__tests__/. Update ai/STATE.md."
+        },
+        {
+          "id": 6,
+          "task": "audit",
+          "target": "ai/AUDIT-mvp.md",
+          "depends_on": [5],
+          "description": "Audit the MVP. Verify: tests pass, game runs end-to-end, code aligns with GDD scope, no dead files. Write findings to ai/AUDIT-mvp.md. Critical findings will abort the next pipeline."
+        }
+      ],
+      "abort_on": {
+        "audit_critical": true,
+        "consecutive_step_failures": 2
+      }
+    }
+  ]
+}
